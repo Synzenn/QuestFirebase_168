@@ -13,3 +13,19 @@ import com.example.firebase2jan26.modeldata.toUiStateSiswa
 import com.example.firebase2jan26.repositori.RepositorySiswa
 import com.example.firebase2jan26.view.route.DestinasiDetail
 import kotlinx.coroutines.launch
+
+class EditViewModel(savedStateHandle: SavedStateHandle, private val repositorySiswa:
+RepositorySiswa
+): ViewModel() {
+    var uiStateSiswa by mutableStateOf(UIStateSiswa())
+        private set
+
+    private val idSiswa: Long =
+        savedStateHandle.get<String>(DestinasiDetail.itemIdArg)?.toLong()
+            ?: error("idSiswa tidak ditemukan di SavedStateHandle")
+    init {
+        viewModelScope.launch {
+            uiStateSiswa = repositorySiswa.getSatuSiswa(idSiswa)!!
+                .toUiStateSiswa(true)
+        }
+    }
