@@ -1,7 +1,5 @@
 package com.example.firebase2jan26.view
 
-
-
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -36,17 +34,19 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.firebase2jan26.viewmodel.HomeViewModel
-import com.example.firebase2jan26.viewmodel.PenyediaViewModel
 import com.example.firebase2jan26.R
 import com.example.firebase2jan26.modeldata.Siswa
 import com.example.firebase2jan26.view.route.DestinasiHome
+import com.example.firebase2jan26.viewmodel.HomeViewModel
+import com.example.firebase2jan26.viewmodel.PenyediaViewModel
 import com.example.firebase2jan26.viewmodel.StatusUiSiswa
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
+    //edit 1.1 tambahkan parameter navigateToItemEntry
     navigateToItemEntry: () -> Unit,
+    //edit 2.4 tambahkan parameter navigateToItemUpdate
     navigateToItemUpdate: (Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = viewModel(factory = PenyediaViewModel.Factory)
@@ -64,6 +64,7 @@ fun HomeScreen(
         },
         floatingActionButton = {
             FloatingActionButton(
+                //edit 1.2 event onClick
                 onClick = navigateToItemEntry,
                 shape = MaterialTheme.shapes.medium,
                 modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_large))
@@ -89,6 +90,7 @@ fun HomeScreen(
 @Composable
 fun HomeBody(
     statusUiSiswa: StatusUiSiswa,
+    //edit 2.3 tambahkan parameter onSiswaClick
     onSiswaClick: (Int) -> Unit,
     retryAction: () -> Unit,
     modifier: Modifier = Modifier
@@ -99,16 +101,15 @@ fun HomeBody(
     ) {
         when (statusUiSiswa) {
             is StatusUiSiswa.Loading -> LoadingScreen()
-            is StatusUiSiswa.Success ->
-                DaftarSiswa(
-                    itemSiswa = statusUiSiswa.siswa,
-                    onSiswaClick = { onSiswaClick(it.id.toInt()) }
-                )
-            is StatusUiSiswa.Error ->
-                ErrorScreen(
-                    retryAction,
-                    modifier = modifier.fillMaxSize()
-                )
+            //edit 2.5 tambahkan event onSiswaClick
+            is StatusUiSiswa.Success -> DaftarSiswa(
+                itemSiswa = statusUiSiswa.siswa,
+                onSiswaClick = { onSiswaClick(it.id.toInt()) }
+            )
+            is StatusUiSiswa.Error -> ErrorScreen(
+                retryAction = retryAction,
+                modifier = modifier.fillMaxSize()
+            )
         }
     }
 }
@@ -145,6 +146,7 @@ fun ErrorScreen(
 @Composable
 fun DaftarSiswa(
     itemSiswa: List<Siswa>,
+    //edit 2.1 tambahkan parameter onSiswaClick
     onSiswaClick: (Siswa) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -154,6 +156,7 @@ fun DaftarSiswa(
                 siswa = person,
                 modifier = Modifier
                     .padding(dimensionResource(id = R.dimen.padding_small))
+                    //edit 2.2 jadikan itemSiswa menjadi clickable()
                     .clickable { onSiswaClick(person) }
             )
         }
@@ -175,7 +178,9 @@ fun ItemSiswa(
                 dimensionResource(id = R.dimen.padding_small)
             )
         ) {
-            Row(modifier = Modifier.fillMaxWidth()) {
+            Row(
+                modifier = Modifier.fillMaxWidth()
+            ) {
                 Text(
                     text = siswa.nama,
                     style = MaterialTheme.typography.titleLarge
