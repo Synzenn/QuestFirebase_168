@@ -11,3 +11,9 @@ import com.example.firebase2jan26.repositori.RepositorySiswa
 import com.example.firebase2jan26.view.route.DestinasiDetail
 import kotlinx.coroutines.launch
 import java.io.IOException
+
+sealed interface StatusUIDetail {
+    data class Success(val siswa: Siswa) : StatusUIDetail
+    object Error : StatusUIDetail
+    object Loading : StatusUIDetail
+}
