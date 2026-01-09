@@ -1,4 +1,4 @@
-package com.example.firebase2jan26.view.route
+package com.example.firebase2jan26.view
 
 
 import androidx.annotation.StringRes
